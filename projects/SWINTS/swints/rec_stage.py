@@ -182,7 +182,7 @@ class REC_STAGE(nn.Module):
         gt_masks = self.rescale(gt_masks.unsqueeze(1))
         k_rec = k_rec*gt_masks
         attn_vecs = self.seq_decoder(k_rec, targets, targets)
-        return attn_vecs
+        return attn_vecs, k_rec
 
 def encoder_layer(in_c, out_c, k=3, s=2, p=1):
     return nn.Sequential(nn.Conv2d(in_c, out_c, k, s, p),
