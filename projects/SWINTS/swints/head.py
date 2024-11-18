@@ -38,7 +38,8 @@ class DynamicHead(nn.Module):
         self.box_pooler = box_pooler
         box_pooler_rec = self._init_box_pooler_rec(cfg, roi_input_shape)
         self.box_pooler_rec = box_pooler_rec
-
+        # Avg. pooling
+        self.avg_pooling = nn.AdaptiveAvgPool2d((1, 1))
         # Build heads.
         num_classes = cfg.MODEL.SWINTS.NUM_CLASSES
         self.hidden_dim = cfg.MODEL.SWINTS.HIDDEN_DIM
@@ -257,10 +258,13 @@ class DynamicHead(nn.Module):
         if targets:
             rec_result = self.rec_stage(rec_map, rec_proposal_features, gt_masks, N, nr_boxes, idx, target_rec)
         else:
-            rec_result = self.rec_stage(rec_map, rec_proposal_features, gt_masks, N, nr_boxes)
+            rec_result, rec_features = self.rec_stage(rec_map, rec_proposal_features, gt_masks, N, nr_boxes)
             rec_result = torch.tensor(rec_result)
+
+        rec_features = self.avg_pooling(rec_features).squeeze()
+
         if self.return_intermediate:
-            return torch.stack(inter_class_logits), torch.stack(inter_pred_bboxes), torch.stack(inter_pred_masks), rec_result
+            return torch.stack(inter_class_logits), torch.stack(inter_pred_bboxes), torch.stack(inter_pred_masks), rec_result, rec_features, proposal_features
         return class_logits[None], pred_bboxes[None], mask_logits[None]
 
 
