@@ -1,6 +1,6 @@
 _BASE_: "Base-SWINTS_swin.yaml"
 MODEL:
-  WEIGHTS: ".output/mixtrain/model_0079999.pth"
+  WEIGHTS: "vintext_model_final.pth"
   SWINTS:
     NUM_PROPOSALS: 300
     NUM_CLASSES: 2
