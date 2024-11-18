@@ -199,12 +199,11 @@ class Boxes:
         """
         assert torch.isfinite(self.tensor).all(), "Box tensor contains infinite or NaN!"
         h, w = box_size
-        x1 = self.tensor[:, 0].clamp(min=0, max=w)
-        y1 = self.tensor[:, 1].clamp(min=0, max=h)
-        x2 = self.tensor[:, 2].clamp(min=0, max=w)
-        y2 = self.tensor[:, 3].clamp(min=0, max=h)
+        x1 = self.tensor[:, 0].clamp(min=0, max=w.item())
+        y1 = self.tensor[:, 1].clamp(min=0, max=h.item())
+        x2 = self.tensor[:, 2].clamp(min=0, max=w.item())
+        y2 = self.tensor[:, 3].clamp(min=0, max=h.item())
         self.tensor = torch.stack((x1, y1, x2, y2), dim=-1)
-
     def nonempty(self, threshold: float = 0.0) -> torch.Tensor:
         """
         Find boxes that are non-empty.
@@ -281,8 +280,8 @@ class Boxes:
         """
         Scale the box with horizontal and vertical scaling factors
         """
-        self.tensor[:, 0::2] *= scale_x
-        self.tensor[:, 1::2] *= scale_y
+        self.tensor[:, 0::2] *= scale_x.item()
+        self.tensor[:, 1::2] *= scale_y.item()
 
     @classmethod
     @_maybe_jit_unused
