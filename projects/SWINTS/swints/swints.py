@@ -154,7 +154,7 @@ class SWINTS(nn.Module):
             images = nested_tensor_from_tensor_list(images)
 
         # Feature Extraction.
-        src = self.backbone(images.tensor)
+        src = self.backbone(images.tensor.squeeze(0))
 
         features = list()      
         for f in self.in_features:
@@ -170,7 +170,7 @@ class SWINTS(nn.Module):
         bs = len(features[0])
         pos_embeddings = self.pos_embeddings.weight[None].repeat(bs, 1, 1)
         proposal_feats = img_feats + pos_embeddings
-        
+
         del img_feats
         if self.training:
             gt_instances = [x["instances"].to(self.device) for x in batched_inputs]
@@ -189,7 +189,7 @@ class SWINTS(nn.Module):
             return loss_dict
 
         else:
-            outputs_class, outputs_coord, outputs_mask,out_rec = self.head(features, proposal_boxes, proposal_feats, mask_encoding=self.mask_encoding)
+            outputs_class, outputs_coord, outputs_mask, out_rec, rec_features, det_features = self.head(features, proposal_boxes, proposal_feats, mask_encoding=self.mask_encoding)
             output = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1], 'pred_masks': outputs_mask[-1]}
             box_cls = output["pred_logits"]
             box_pred = output["pred_boxes"]
@@ -199,6 +199,8 @@ class SWINTS(nn.Module):
             results.scores = box_cls
             results.pred_masks = mask_pred.squeeze(1)
             results.pred_rec = out_rec
+            results.rec_features = rec_features
+            results.det_features = det_features
             results = [results]
             processed_results = []
             for results_per_image, input_per_image, image_size in zip(results, batched_inputs, images.image_sizes):
@@ -206,7 +208,7 @@ class SWINTS(nn.Module):
                 width = input_per_image.get("width", image_size[1])
                 r = detector_postprocess(results_per_image, height, width)
                 processed_results.append({"instances": r})
-            
+
             return processed_results
 
     @torch.no_grad()
