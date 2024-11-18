@@ -45,7 +45,7 @@ def _do_paste_mask(masks, boxes, img_h: int, img_w: int, skip_empty: bool = True
         y1_int = torch.clamp(boxes[:, 3].max().ceil() + 1, max=img_h).to(dtype=torch.int32)
     else:
         x0_int, y0_int = 0, 0
-        x1_int, y1_int = img_w, img_h
+        x1_int, y1_int = img_w.item(), img_h.item()
     x0, y0, x1, y1 = torch.split(boxes, 1, dim=1)  # each is Nx1
 
     N = masks.shape[0]
