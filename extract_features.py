@@ -205,7 +205,7 @@ def main(args):
 
     extractor = Extractor(cfg)
 
-    BASE_DIR = "/content/images"
+    BASE_DIR = "/kaggle/input/train-vis/ViSignboardVQA/train_image"
     for image_file in tqdm(os.listdir(BASE_DIR), desc="Extracting"):
         image_id = int(image_file.split(".")[0])
         img = read_image(os.path.join(BASE_DIR, image_file), format="BGR")
@@ -223,7 +223,7 @@ def main(args):
             "texts": detected_texts,
             "boxes": boxes.numpy()
         }
-        np.save(f"/content/swintextspotter/{image_id}.npy", features, allow_pickle=True)
+        np.save(f"/kaggle/working/{image_id}.npy", features, allow_pickle=True)
 
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
