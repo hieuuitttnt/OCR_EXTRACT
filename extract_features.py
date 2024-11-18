@@ -223,7 +223,7 @@ def main(args):
             "texts": detected_texts,
             "boxes": boxes.numpy()
         }
-        np.save(f"/kaggle/working/{image_id}.npy", features, allow_pickle=True)
+        np.save(f"/kaggle/working/train_private_ocr/{image_id}.npy", features, allow_pickle=True)
 
 if __name__ == "__main__":
     args = default_argument_parser().parse_args()
