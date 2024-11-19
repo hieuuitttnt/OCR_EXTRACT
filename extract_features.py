@@ -207,7 +207,7 @@ def main(args):
 
     BASE_DIR = "/kaggle/input/train-vis/ViSignboardVQA/train_image"
     for image_file in tqdm(os.listdir(BASE_DIR), desc="Extracting"):
-        image_id = int(image_file.split(".")[0])
+        image_id = int(image_file.split(".")[0].split("_")[-1])
         img = read_image(os.path.join(BASE_DIR, image_file), format="BGR")
         predictions, visualized_output = extractor.run_on_image(img, 0.3, os.path.join(BASE_DIR, image_file))
         result = predictions["instances"]
