@@ -148,7 +148,13 @@ class Extractor(object):
             vis_output (VisImage): the visualized image output.
         """
         vis_output = None
+        
+        # Debug: Print the shape of the input image
+        print(f"Input image shape: {image.shape}")
         predictions = self.predictor(image)
+        
+        # Debug: Print the predictions
+        print(f"Predictions: {predictions}")
         # Convert image from OpenCV BGR format to Matplotlib RGB format.
         image = image[:, :, ::-1]
         visualizer = Visualizer(image, self.metadata, instance_mode=self.instance_mode)

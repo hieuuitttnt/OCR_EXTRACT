@@ -416,6 +416,15 @@ class PatchEmbed(nn.Module):
     def forward(self, x):
         """Forward function."""
         # padding
+            # Debug: Print the shape of the input tensor
+        print(f"Input tensor shape before patch embedding: {x.shape}")
+        
+        x = self.patch_embed(x)
+        
+        # Debug: Print the shape of the tensor after patch embedding
+        print(f"Tensor shape after patch embedding: {x.shape}")
+    
+    # Continue with the rest of the forward method
         _, _, H, W = x.size()
         if W % self.patch_size[1] != 0:
             x = F.pad(x, (0, self.patch_size[1] - W % self.patch_size[1]))
