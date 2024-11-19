@@ -208,8 +208,11 @@ def main(args):
     BASE_DIR = "/kaggle/input/train-vis/ViSignboardVQA/train_image"
     for image_file in tqdm(os.listdir(BASE_DIR), desc="Extracting"):
         image_id = int(image_file.split(".")[0].split("_")[-1])
+        print(f"Processing image ID: {image_id}")
         img = read_image(os.path.join(BASE_DIR, image_file), format="BGR")
+        print(f"Image shape for image ID {image_id}: {img.shape}")
         predictions, visualized_output = extractor.run_on_image(img, 0.3, os.path.join(BASE_DIR, image_file))
+        print(f"Predictions for image ID {image_id}: {predictions}")
         result = predictions["instances"]
         rec = result.pred_rec
         detected_texts = [ctc_decode_recognition(rrec) for rrec in rec]
