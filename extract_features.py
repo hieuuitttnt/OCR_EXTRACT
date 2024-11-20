@@ -140,7 +140,9 @@ class Extractor(object):
     def run_on_image(self, image, confidence_threshold, path):
         """
         Args:
-            image (np.ndarray): an image of shape (H, W, C) (in BGR order).
+        Input image shape: (568, 851, 3)
+        torch.Size([3, 1024, 1504])
+            image (np.ndarray): an image of shape (Height, Weight, Channel) (in BGR order).
                 This is the format used by OpenCV.
 
         Returns:
@@ -148,7 +150,8 @@ class Extractor(object):
             vis_output (VisImage): the visualized image output.
         """
         vis_output = None
-        
+        # if image.ndim == 3:
+        #     image = np.expand_dims(image, axis=0)
         # Debug: Print the shape of the input image
         print(f"Input image shape: {image.shape}")
         predictions = self.predictor(image)
